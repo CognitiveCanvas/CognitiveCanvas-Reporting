@@ -31,7 +31,6 @@
 | Topic/Title | String  |
 | Created | Date |
 | Modified | Date |
-| MarkedCompleted | Date |
 | Screen | Shot |
 | Versions | [V- Tag] |
 
