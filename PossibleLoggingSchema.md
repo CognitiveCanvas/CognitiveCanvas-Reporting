@@ -8,8 +8,6 @@
 | Shape | String |
 | Color | String |
 | Size | String |
-| OutgoingEdges | [EdgeIDs Integer] |
-| IncomingEdges | [EdgeIDs Integer] |
 | Created | Date |
 | LocationX | Integer |
 | LocationY | Integer |
@@ -20,6 +18,8 @@
 | ------| ------------ |
 | EdgeID | Integer Primary Key |
 | Creator | String Foreign Key |
+| Node 1 | Integer Foreign Key |
+| Node 2 | Integer Foreign Key |
 | Label | String |
 | Created | Date |
 | Type | {One of Double Arrowed, Single Arrowed, none } |
