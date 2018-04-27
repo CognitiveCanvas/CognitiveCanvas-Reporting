@@ -1,5 +1,7 @@
 # Node  
 
+| Field | Description  |
+| ------| ------------ |
 | NodeID | Integer Primary Key |
 | Creator | String Foreign Key |
 | Label | String |
@@ -14,6 +16,8 @@
 
 # Edge  
 
+| Field | Description  |
+| ------| ------------ |
 | EdgeID | Integer Primary Key |
 | Creator | String Foreign Key |
 | Label | String |
