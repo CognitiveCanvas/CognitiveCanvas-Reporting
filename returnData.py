@@ -20,7 +20,7 @@ def display_posts():
 
 @app.route("/user/<int:user_id>")
 def get_user_data_by_user_id(user_id):
-    list_of_users = mongo.get_user_by_id("id", user_id)
+    list_of_users = mongo.get_user_by_key_value("id", user_id)
     return jsonify({"status": "success", "users": list_of_users})
 
 
