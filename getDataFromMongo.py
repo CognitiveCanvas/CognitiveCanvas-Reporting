@@ -38,6 +38,15 @@ class DbData:
             i.pop("_id")
         return outdata
 
+    def get_users(self):
+        """
+
+        TODO
+
+        :return:
+        """
+        return None
+
     def get_map_by_key_value(self, data_point, data_value):
         """
         Returns the records in the user table which match the given key value pair
