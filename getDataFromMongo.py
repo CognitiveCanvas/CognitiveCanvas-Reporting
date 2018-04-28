@@ -38,5 +38,20 @@ class DbData:
             i.pop("_id")
         return outdata
 
+    def get_map_by_key_value(self, data_point, data_value):
+        """
+        Returns the records in the user table which match the given key value pair
+
+        :param data_point: String
+                           The data key which is to be looked up
+        :param data_value: The corresponding value.
+        :return: The records that correspond to the key value pair.
+        """
+        maps = self.mongo.db.map.find({data_point: data_value})
+        outdata = [i for i in maps]
+        for i in outdata:
+            i.pop("_id")
+        return outdata
+
     def add_user(self, user):
         self.mongo.db.users.insert(user)
