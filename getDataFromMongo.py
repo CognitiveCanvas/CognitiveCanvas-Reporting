@@ -32,11 +32,7 @@ class DbData:
         :param data_value: The corresponding value.
         :return: The records that correspond to the key value pair.
         """
-        users = self.mongo.db.users.find({data_point: data_value})
-        outdata = [i for i in users]
-        for i in outdata:
-            i.pop("_id")
-        return outdata
+        return self.__cleanse_data(self.mongo.db.users.find({data_point: data_value}))
 
     def get_users(self):
         """
@@ -45,7 +41,7 @@ class DbData:
 
         :return:
         """
-        return None
+        return self.__cleanse_data(self.mongo.db.users.find())
 
     def get_map_by_key_value(self, data_point, data_value):
         """
@@ -56,11 +52,13 @@ class DbData:
         :param data_value: The corresponding value.
         :return: The records that correspond to the key value pair.
         """
-        maps = self.mongo.db.map.find({data_point: data_value})
-        outdata = [i for i in maps]
-        for i in outdata:
-            i.pop("_id")
-        return outdata
+        return self.__cleanse_data(self.mongo.db.map.find({data_point: data_value}))
 
     def add_user(self, user):
         self.mongo.db.users.insert(user)
+
+    def __cleanse_data(self, data):
+        outdata = [i for i in data]
+        for i in outdata:
+            i.pop("_id")
+        return outdata
