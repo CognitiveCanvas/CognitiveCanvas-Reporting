@@ -6,7 +6,7 @@ from getDataFromSite import *
 
 app = Flask(__name__)
 mongo = DummyData()
-mongo = DbData(app)
+#mongo = DbData(app)
 
 
 @app.errorhandler(404)
@@ -47,6 +47,8 @@ def get_user_data_if_logged_in():
 @app.route("/users/<string:user_email>/maps/created")
 def get_maps_created_by_user_email(user_email):
     list_of_users = mongo.get_user_by_key_value("email", user_email, fields=["MapsCreated"])
+    if len(list_of_users)==0:
+        return jsonify({"status": "success", "maps": []})
     list_of_maps = list_of_users[0]["MapsCreated"]
     return jsonify({"status": "success", "maps": list_of_maps})
 
