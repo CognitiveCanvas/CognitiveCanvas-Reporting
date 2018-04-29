@@ -31,13 +31,6 @@ def get_user_data_by_user_email(user_email):
     return jsonify({"status": "success", "users": list_of_users})
 
 
-@app.route("/users/<string:user_id>/actions")
-def get_user_action_data_by_user_id(user_id):
-    action_filter = request.args.get("filter", None) or request.form.get("filter", None)
-    list_of_users = get_action_data(user_id, action_filter)
-    return jsonify({"status": "success", "users": list_of_users})
-
-
 @app.route("/users/create")
 def create_user():
     mongo.add_user({"name": request.args['name'], "id": request.args["id"]})
