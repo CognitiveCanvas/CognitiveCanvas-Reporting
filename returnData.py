@@ -66,3 +66,10 @@ def get_maps_accessed_by_user_email(user_email):
 def create_user():
     mongo.add_user({"name": request.args['name'], "id": request.args["id"]})
     return jsonify({"status": "success", "message": "user added successfully"})
+
+
+def return_json_data(payload):
+    response = jsonify({"status": "success", "users": payload})
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return response
+
