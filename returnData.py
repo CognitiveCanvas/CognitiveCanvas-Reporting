@@ -64,6 +64,18 @@ def get_maps_accessed_by_user_email(user_email):
     return return_json_data("success", "maps", list_of_maps)
 
 
+@app.route("/maps")
+def get_map_data():
+    list_of_maps = mongo.get_maps()
+    return return_json_data("success", "maps", list_of_maps)
+
+
+@app.route("/maps/<string:owner_email>")
+def get_map_data_by_owner_email(owner_email):
+    list_of_maps = mongo.get_map_by_key_value("Owner", owner_email)
+    return return_json_data("success", "maps", list_of_maps)
+
+
 @app.route("/users/create")
 def create_user():
     mongo.add_user({"name": request.args['name'], "id": request.args["id"]})
