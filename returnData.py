@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify, g, redirect, url_for
+from flask import Flask, render_template, request, jsonify, g, redirect, url_for, make_response
 from time import gmtime, strftime
 from getDataFromMongo import DbData
 from getDummyData import DummyData
@@ -73,6 +73,12 @@ def get_map_data():
 @app.route("/maps/<string:owner_email>")
 def get_map_data_by_owner_email(owner_email):
     list_of_maps = mongo.get_map_by_key_value("Owner", owner_email)
+    return return_json_data("success", "maps", list_of_maps)
+
+
+@app.route("/maps/<int:map_id>")
+def get_map_data_by_map_id(map_id):
+    list_of_maps = mongo.get_map_by_key_value("MapWebstrateID", map_id)
     return return_json_data("success", "maps", list_of_maps)
 
 

@@ -42,7 +42,7 @@ class DummyData:
                             }]"""
 
         self.map_json = """[{
-                            "MapWebstrateID": "1",
+                            "MapWebstrateID": 1,
                             "Owner": "testuser1@ucsd.edu",
                             "Permission": ["testuser2@ucsd.edu", "testuser4@ucsd.edu"],
                             "Title": "Test Map 1",
@@ -51,7 +51,7 @@ class DummyData:
                             "Screen Shot": "testmap1.png",
                             "Versions": ["have", "no", "idea", "what", "this", "is"]
                         }, {
-                            "MapWebstrateID": "4",
+                            "MapWebstrateID": 4,
                             "Owner": "testuser2@ucsd.edu",
                             "Permission": ["testuser1@ucsd.edu", "testuser4@ucsd.edu"],
                             "Title": "Test Map 4",
