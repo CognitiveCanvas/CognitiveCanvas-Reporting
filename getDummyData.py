@@ -51,6 +51,15 @@ class DummyData:
                             "Screen Shot": "testmap1.png",
                             "Versions": ["have", "no", "idea", "what", "this", "is"]
                         }, {
+                            "MapWebstrateID": 2,
+                            "Owner": "testuser1@ucsd.edu",
+                            "Permission": ["testuser2@ucsd.edu", "testuser4@ucsd.edu"],
+                            "Title": "Test Map 2",
+                            "Created Date": 152547283,
+                            "Modified": 1525674763,
+                            "Screen Shot": "testmap1.png",
+                            "Versions": ["have", "no", "idea", "what", "this", "is"]
+                        }, {
                             "MapWebstrateID": 4,
                             "Owner": "testuser2@ucsd.edu",
                             "Permission": ["testuser1@ucsd.edu", "testuser4@ucsd.edu"],
