@@ -74,9 +74,16 @@ def get_map_data():
 def get_map_data_by_owner_email(owner_email):
     list_of_maps = mongo.get_map_by_key_value("Owner", owner_email)
     title_filter = request.args.get("title") or request.form.get("title")
-    if not title_filter:
+    id_filter = request.args.get("id") or request.form.get("id")
+    if not (title_filter or id_filter):
         return return_json_data("success", "maps", list_of_maps)
-    return return_json_data("success", "maps", [i for i in list_of_maps if i['Title'] == title_filter])
+    if title_filter and not id_filter:
+        return return_json_data("success", "maps", [i for i in list_of_maps if i['Title'] == title_filter])
+    id_filter = int(id_filter)
+    if id_filter and not title_filter:
+        return return_json_data("success", "maps", [i for i in list_of_maps if i['MapWebstrateID'] == id_filter])
+    return return_json_data("success", "maps", [i for i in list_of_maps if i['MapWebstrateID'] == id_filter and
+                                                i['Title'] == title_filter])
 
 
 @app.route("/maps/<int:map_id>")
