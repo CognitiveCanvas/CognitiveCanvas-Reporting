@@ -1,8 +1,11 @@
+from collections import defaultdict
 from flask import Flask, render_template, request, jsonify, g, redirect, url_for, make_response
 from time import gmtime, strftime
 from getDataFromMongo import DbData
+from getDataFromSite import ScrapeMap
 from getDummyData import DummyData
-from getDataFromSite import *
+from getDataFromSite import ScrapeMap
+from datetime import datetime, timedelta
 
 app = Flask(__name__)
 mongo = DummyData()
@@ -70,7 +73,7 @@ def get_map_data():
     return return_json_data("success", "maps", list_of_maps)
 
 
-@app.route("/maps/<string:owner_email>")
+@app.route("/users/<string:owner_email>/maps")
 def get_map_data_by_owner_email(owner_email):
     list_of_maps = mongo.get_map_by_key_value("Owner", owner_email)
     title_filter = request.args.get("title") or request.form.get("title")
@@ -86,16 +89,50 @@ def get_map_data_by_owner_email(owner_email):
                                                 i['Title'] == title_filter])
 
 
-@app.route("/maps/<int:map_id>")
+@app.route("/users/<string:owner_email>/maps/timeline")
+def get_map_timeline_by_owner_email(owner_email):
+    list_of_maps = mongo.get_map_by_key_value("Owner", owner_email)
+    type_filter = request.args.get("filter") or request.form.get("filter")
+    filtered_list = defaultdict(int)
+
+    if type_filter == "days":
+        for i in list_of_maps:
+            creation_date = datetime.fromtimestamp(i["Created Date"])
+            print(creation_date.strftime("%Y-%m-%d"))
+            today = datetime.today()
+            ten_days_ago = today - timedelta(days=70)
+
+            for day in (ten_days_ago + timedelta(n) for n in range(71)):
+                if creation_date.date() == day.date():
+                    filtered_list[day.strftime("%Y-%m-%d")] += 1
+
+    return return_json_data("success", "maps", dict(filtered_list))
+
+
+@app.route("/maps/<string:map_id>")
 def get_map_data_by_map_id(map_id):
     list_of_maps = mongo.get_map_by_key_value("MapWebstrateID", map_id)
     return return_json_data("success", "maps", list_of_maps)
 
 
-@app.route("/users/create")
-def create_user():
-    mongo.add_user({"name": request.args['name'], "id": request.args["id"]})
-    return return_json_data("success", "message", "user added successfully")
+@app.route("/maps/<string:map_id>/nodes")
+def get_nodes_by_map_id(map_id):
+    scraper = ScrapeMap("https://web:strate@webstrates.ucsd.edu/datateam/")
+    node_filter = request.args.get("filter") or request.form.get("filter")
+    nodes = scraper.get_nodes()
+    if node_filter:
+        nodes = {i.get("id"): i.get(node_filter) for i in nodes}
+    return return_json_data("success", "nodes", nodes)
+
+
+@app.route("/maps/<string:map_id>/edges")
+def get_edges_by_map_id(map_id):
+    scraper = ScrapeMap("https://web:strate@webstrates.ucsd.edu/datateam/")
+    edge_filter = request.args.get("filter") or request.form.get("filter")
+    edges = scraper.get_edges()
+    if edge_filter:
+        edges = {i.get("id"): i.get(edge_filter) for i in edges}
+    return return_json_data("success", "edges", edges)
 
 
 def return_json_data(status, dtype, payload):
