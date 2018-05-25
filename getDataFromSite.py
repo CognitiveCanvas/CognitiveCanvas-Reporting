@@ -23,8 +23,6 @@ class ScrapeMap:
             browser.quit()
 
         html = browser.page_source
-        print(html)
-        print("\n\n\n\n\n")
         soup = BeautifulSoup(html, "html5lib")
 
         self.nodes = []
@@ -44,6 +42,8 @@ class ScrapeMap:
             if len(children) == 2:
                 label = children[1].tspan.text
 
+            creation = int(node["id"].split("_")[1])//1000
+
             self.nodes.append({
                 "id": node["id"],
                 "shape": shape.name,
@@ -51,7 +51,8 @@ class ScrapeMap:
                 "color": shape_style.get("fill"),
                 "locationX": loc_x.strip(),
                 "locationY": loc_y.strip(),
-                "size": shape["r"]
+                "size": shape["r"],
+                "creation_time": creation
             })
 
         for edge in soup.find_all('g', attrs={'class': 'link'}):
@@ -63,6 +64,8 @@ class ScrapeMap:
             if len(children) == 2:
                 label = children[1].tspan.text
 
+            creation = int(edge["id"].split("_")[1])//1000
+
             self.edges.append({
                 "id": edge["id"],
                 "source_id": edge["source_id"],
@@ -71,18 +74,13 @@ class ScrapeMap:
                 "locationX1": shape["x1"],
                 "locationY1": shape["y1"],
                 "locationX2": shape["x2"],
-                "locationY2": shape["y2"]
+                "locationY2": shape["y2"],
+                "creation_time": creation
             })
 
-        print(self.nodes)
-        print(self.edges)
 
     def get_edges(self):
         return self.edges
 
     def get_nodes(self):
         return self.nodes
-
-
-scraper = ScrapeMap("https://web:strate@webstrates.ucsd.edu/datateam/")
-print(dumps({"nodes":scraper.get_nodes(),"edges":scraper.get_edges()}))
