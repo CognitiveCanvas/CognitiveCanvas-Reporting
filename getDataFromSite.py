@@ -11,7 +11,7 @@ class ScrapeMap:
         self.map_url = map_url
         option = webdriver.ChromeOptions()
         option.add_argument(" — incognito")
-        browser = webdriver.Chrome(executable_path="/Users/bhargav/Downloads/chromedriver", chrome_options=option)
+        browser = webdriver.Chrome(executable_path="./chromedriver", chrome_options=option)
         browser.get(map_url)
 
         timeout = 20
