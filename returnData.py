@@ -6,6 +6,7 @@ from getDataFromSite import ScrapeMap
 from getDummyData import DummyData
 from getDataFromSite import ScrapeMap
 from datetime import datetime, timedelta
+from json import loads
 
 app = Flask(__name__)
 mongo = DummyData()
@@ -122,10 +123,7 @@ def get_nodes_by_map_id(map_id):
     # nodes = scraper.get_nodes()
     # if node_filter:
     #     nodes = {i.get("id"): i.get(node_filter) for i in nodes}
-    # return return_json_data("success", "nodes", nodes)
-
-    return '''{
-    "nodes": [
+    return return_json_data("success", "nodes", loads('''[
         {
             "color": "blue",
             "creation_time": 1527188610,
@@ -156,10 +154,7 @@ def get_nodes_by_map_id(map_id):
             "shape": "circle",
             "size": "65.065"
         }
-    ],
-    "status": "success"
-}
-'''
+    ]'''))
 
 
 @app.route("/maps/<string:map_id>/edges")
@@ -169,9 +164,7 @@ def get_edges_by_map_id(map_id):
     # edges = scraper.get_edges()
     # if edge_filter:
     #     edges = {i.get("id"): i.get(edge_filter) for i in edges}
-    # return return_json_data("success", "edges", edges)
-    return '''{
-  "edges": [
+    return return_json_data("success", "edges", loads(    '''[
     {
       "creation_time": 1527188849, 
       "id": "By8FhYNJm_1527188849601", 
@@ -183,10 +176,8 @@ def get_edges_by_map_id(map_id):
       "source_id": "By8FhYNJm_1527188652520", 
       "target_id": "By8FhYNJm_1527188641813"
     }
-  ], 
-  "status": "success"
-}
-'''
+  ]'''))
+
 
 
 def return_json_data(status, dtype, payload):
