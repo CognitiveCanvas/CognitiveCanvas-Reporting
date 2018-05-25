@@ -9,27 +9,27 @@ class DummyData:
                                 "LastName": "User 1",
                                 "Type": "student",
                                 "isLogin": false,
-                                "MapsCreated": [1, 2, 3],
-                                "MapsAccessed": [1, 2, 3, 4, 5],
-                                "MapsWithPermission": [1, 2, 3, 4, 5, 6, 7, 8]
+                                "MapsCreated": ["datateam1", "datateam2", "datateam3"],
+                                "MapsAccessed": ["datateam1", "datateam2", "datateam3", "datateam4", "datateam5"],
+                                "MapsWithPermission": ["datateam1", "datateam2", "datateam3", "datateam4", "datateam5", "datateam6", "datateam7", "datateam8"]
                             }, {
                                 "email": "testuser2@ucsd.edu",
                                 "FirstName": "Test",
                                 "LastName": "User 2",
                                 "Type": "student",
                                 "isLogin": false,
-                                "MapsCreated": [4, 5],
-                                "MapsAccessed": [3, 4, 5],
-                                "MapsWithPermission": [1, 2, 3, 4, 5]
+                                "MapsCreated": ["datateam4", "datateam5"],
+                                "MapsAccessed": ["datateam3", "datateam4", "datateam5"],
+                                "MapsWithPermission": ["datateam1", "datateam2", "datateam3", "datateam4", "datateam5"]
                             }, {
                                 "email": "testuser3@ucsd.edu",
                                 "FirstName": "Test",
                                 "LastName": "User 3",
                                 "Type": "student",
                                 "isLogin": false,
-                                "MapsCreated": [6, 7, 8],
-                                "MapsAccessed": [6, 7, 8],
-                                "MapsWithPermission": [6, 7, 8]
+                                "MapsCreated": ["datateam6", "datateam7", "datateam8"],
+                                "MapsAccessed": ["datateam6", "datateam7", "datateam8"],
+                                "MapsWithPermission": ["datateam6", "datateam7", "datateam8"]
                             }, {
                                 "email": "testuser4@ucsd.edu",
                                 "FirstName": "Test",
@@ -37,35 +37,35 @@ class DummyData:
                                 "Type": "admin",
                                 "isLogin": true,
                                 "MapsCreated": [],
-                                "MapsAccessed": [1, 2, 3, 4, 5, 6, 7, 8],
-                                "MapsWithPermission": [1, 2, 3, 4, 5, 6, 7, 8]
+                                "MapsAccessed": ["datateam1", "datateam2", "datateam3", "datateam4", "datateam5", "datateam6", "datateam7", "datateam8"],
+                                "MapsWithPermission": ["datateam1", "datateam2", "datateam3", "datateam4", "datateam5", "datateam6", "datateam7", "datateam8"]
                             }]"""
 
         self.map_json = """[{
-                            "MapWebstrateID": 1,
+                            "MapWebstrateID": "datateam1",
                             "Owner": "testuser1@ucsd.edu",
                             "Permission": ["testuser2@ucsd.edu", "testuser4@ucsd.edu"],
                             "Title": "Test Map 1",
-                            "Created Date": 152547000,
-                            "Modified": 1525474763,
+                            "Created Date": 1527221822,
+                            "Modified": 1527222822,
                             "Screen Shot": "testmap1.png",
                             "Versions": ["have", "no", "idea", "what", "this", "is"]
                         }, {
-                            "MapWebstrateID": 2,
+                            "MapWebstrateID": "datateam2",
                             "Owner": "testuser1@ucsd.edu",
                             "Permission": ["testuser2@ucsd.edu", "testuser4@ucsd.edu"],
                             "Title": "Test Map 2",
-                            "Created Date": 152547283,
-                            "Modified": 1525674763,
+                            "Created Date": 1527223822,
+                            "Modified": 1527224822,
                             "Screen Shot": "testmap1.png",
                             "Versions": ["have", "no", "idea", "what", "this", "is"]
                         }, {
-                            "MapWebstrateID": 4,
+                            "MapWebstrateID": "datateam3",
                             "Owner": "testuser2@ucsd.edu",
                             "Permission": ["testuser1@ucsd.edu", "testuser4@ucsd.edu"],
                             "Title": "Test Map 4",
-                            "Created Date": 152547000,
-                            "Modified": 1525474763,
+                            "Created Date": 1527226822,
+                            "Modified": 1527228822,
                             "Screen Shot": "testmap4.png",
                             "Versions": ["have", "no", "idea", "what", "this", "is"]
                         }]"""
