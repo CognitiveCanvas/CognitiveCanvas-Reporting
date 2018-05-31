@@ -5,13 +5,20 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 from bs4 import BeautifulSoup
 from json import dumps
+from pyvirtualdisplay import Display
+from selenium import webdriver
+
 
 class ScrapeMap:
     def __init__(self, map_url):
         self.map_url = map_url
-        option = webdriver.ChromeOptions()
-        option.add_argument(" — incognito")
-        browser = webdriver.Chrome(executable_path="./chromedriver", chrome_options=option)
+        display = Display(visible=0, size=(1024, 768))
+        display.start()
+        # option = webdriver.ChromeOptions()
+        # option.add_argument(" — incognito")
+        # browser = webdriver.Chrome(executable_path="./chromedriver", chrome_options=option)
+
+        browser = webdriver.Firefox()
         browser.get(map_url)
 
         timeout = 20
@@ -42,7 +49,7 @@ class ScrapeMap:
             if len(children) == 2:
                 label = children[1].tspan.text
 
-            creation = int(node["id"].split("_")[1])//1000
+            creation = int(node["id"].split("_")[1]) // 1000
 
             self.nodes.append({
                 "id": node["id"],
@@ -64,7 +71,7 @@ class ScrapeMap:
             if len(children) == 2:
                 label = children[1].tspan.text
 
-            creation = int(edge["id"].split("_")[1])//1000
+            creation = int(edge["id"].split("_")[1]) // 1000
 
             self.edges.append({
                 "id": edge["id"],
@@ -78,9 +85,15 @@ class ScrapeMap:
                 "creation_time": creation
             })
 
+        browser.quit()
+        display.stop()
 
     def get_edges(self):
         return self.edges
 
     def get_nodes(self):
         return self.nodes
+
+
+scraper = ScrapeMap("https://web:strate@webstrates.ucsd.edu/datateam/")
+print(scraper.get_nodes())
