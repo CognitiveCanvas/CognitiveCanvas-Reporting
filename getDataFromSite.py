@@ -5,20 +5,36 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 from bs4 import BeautifulSoup
 from json import dumps
-from pyvirtualdisplay import Display
+
 from selenium import webdriver
+
+
 
 
 class ScrapeMap:
     def __init__(self, map_url):
         self.map_url = map_url
-        display = Display(visible=0, size=(1024, 768))
-        display.start()
-        # option = webdriver.ChromeOptions()
-        # option.add_argument(" — incognito")
-        # browser = webdriver.Chrome(executable_path="./chromedriver", chrome_options=option)
 
-        browser = webdriver.Firefox()
+        chrome_options = webdriver.ChromeOptions()
+        chrome_options.add_argument('--headless')
+        chrome_options.add_argument('--no-sandbox')
+        chrome_options.add_argument('--disable-gpu')
+        chrome_options.add_argument('--window-size=1280x1696')
+        chrome_options.add_argument('--user-data-dir=/tmp/user-data')
+        chrome_options.add_argument('--hide-scrollbars')
+        chrome_options.add_argument('--enable-logging')
+        chrome_options.add_argument('--log-level=0')
+        chrome_options.add_argument('--v=99')
+        chrome_options.add_argument('--single-process')
+        chrome_options.add_argument('--data-path=/tmp/data-path')
+        chrome_options.add_argument('--ignore-certificate-errors')
+        chrome_options.add_argument('--homedir=/tmp')
+        chrome_options.add_argument('--disk-cache-dir=/tmp/cache-dir')
+        chrome_options.add_argument('user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, '
+                                    'like Gecko) Chrome/61.0.3163.100 Safari/537.36')
+        chrome_options.binary_location = "./headless-chromium"
+
+        browser = webdriver.Chrome(executable_path="./chromedriver", chrome_options=chrome_options)
         browser.get(map_url)
 
         timeout = 20
@@ -49,7 +65,7 @@ class ScrapeMap:
             if len(children) == 2:
                 label = children[1].tspan.text
 
-            creation = int(node["id"].split("_")[1]) // 1000
+            creation = int(node["id"].split("_")[1])//1000
 
             self.nodes.append({
                 "id": node["id"],
@@ -71,7 +87,7 @@ class ScrapeMap:
             if len(children) == 2:
                 label = children[1].tspan.text
 
-            creation = int(edge["id"].split("_")[1]) // 1000
+            creation = int(edge["id"].split("_")[1])//1000
 
             self.edges.append({
                 "id": edge["id"],
@@ -86,14 +102,13 @@ class ScrapeMap:
             })
 
         browser.quit()
-        display.stop()
+
 
     def get_edges(self):
         return self.edges
 
     def get_nodes(self):
         return self.nodes
-
 
 scraper = ScrapeMap("https://web:strate@webstrates.ucsd.edu/datateam/")
 print(scraper.get_nodes())

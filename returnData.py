@@ -93,7 +93,7 @@ def get_node_frequency_by_user_id(user_email):
     return return_json_data("success", "frequency", dict(nodes_labels_by_map))
 
 
-@app.route("/users/nodes/frequency")
+@app.route("/nodes/frequency")
 def get_node_frequency_for_all_users():
     list_of_users = mongo.get_users()
     nodes_labels_by_map = defaultdict(int)
