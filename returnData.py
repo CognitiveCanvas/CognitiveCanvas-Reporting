@@ -68,11 +68,29 @@ def get_maps_accessed_by_user_email(user_email):
     return return_json_data("success", "maps", list_of_maps)
 
 
-@app.route("/maps")
-def get_map_data():
-    list_of_maps = mongo.get_maps()
-    list_of_maps = filter_map_by_date_range(list_of_maps)
-    return return_json_data("success", "maps", list_of_maps)
+@app.route("/users/<string:user_email>/nodes")
+def get_nodes_by_user_id(user_email):
+    list_of_maps = mongo.get_user_by_key_value("email", user_email, fields=["MapsCreated"])
+    nodes_by_map = {}
+    sum_of_nodes = 0
+    for map in list_of_maps[0]["MapsCreated"]:
+        # scraper = ScrapeMap("https://web:strate@webstrates.ucsd.edu/datateam/")
+        nodes = mongo.get_nodes()  # scraper.get_nodes()
+        nodes_by_map[map] = nodes
+        sum_of_nodes += len(nodes)
+    return return_json_data("success", "nodes", {"nodes": nodes_by_map, "total": sum_of_nodes})
+
+
+@app.route("/users/<string:user_email>/nodes/frequency")
+def get_node_frequency_by_user_id(user_email):
+    list_of_maps = mongo.get_user_by_key_value("email", user_email, fields=["MapsCreated"])
+    nodes_labels_by_map = defaultdict(int)
+    for map in list_of_maps[0]["MapsCreated"]:
+        # scraper = ScrapeMap("https://web:strate@webstrates.ucsd.edu/datateam/")
+        nodes = mongo.get_nodes()  # scraper.get_nodes()
+        for node in nodes:
+            nodes_labels_by_map[node["label"] or ""] += 1
+    return return_json_data("success", "frequency", dict(nodes_labels_by_map))
 
 
 @app.route("/users/<string:owner_email>/maps")
@@ -111,6 +129,13 @@ def get_map_timeline_by_owner_email(owner_email):
                     filtered_list[day.strftime("%Y-%m-%d")] += 1
 
     return return_json_data("success", "maps", dict(filtered_list))
+
+
+@app.route("/maps")
+def get_map_data():
+    list_of_maps = mongo.get_maps()
+    list_of_maps = filter_map_by_date_range(list_of_maps)
+    return return_json_data("success", "maps", list_of_maps)
 
 
 @app.route("/maps/<string:map_id>")
