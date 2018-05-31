@@ -71,6 +71,7 @@ def get_maps_accessed_by_user_email(user_email):
 @app.route("/maps")
 def get_map_data():
     list_of_maps = mongo.get_maps()
+    list_of_maps = filter_map_by_date_range(list_of_maps)
     return return_json_data("success", "maps", list_of_maps)
 
 
@@ -79,11 +80,7 @@ def get_map_data_by_owner_email(owner_email):
     list_of_maps = mongo.get_map_by_key_value("Owner", owner_email)
     title_filter = request.args.get("title") or request.form.get("title")
     id_filter = request.args.get("id") or request.form.get("id")
-    from_date = request.args.get("fromdate") or request.form.get("fromdate")
-    to_date = request.args.get("todate") or request.form.get("todate") or datetime.today().timestamp()
-
-    if from_date:
-        list_of_maps = [i for i in list_of_maps if from_date <= i["Created Date"] <= to_date]
+    list_of_maps = filter_map_by_date_range(list_of_maps)
 
     if not (title_filter or id_filter):
         return return_json_data("success", "maps", list_of_maps)
@@ -170,7 +167,7 @@ def get_edges_by_map_id(map_id):
     # edges = scraper.get_edges()
     # if edge_filter:
     #     edges = {i.get("id"): i.get(edge_filter) for i in edges}
-    return return_json_data("success", "edges", loads(    '''[
+    return return_json_data("success", "edges", loads('''[
     {
       "creation_time": 1527188849, 
       "id": "By8FhYNJm_1527188849601", 
@@ -184,6 +181,13 @@ def get_edges_by_map_id(map_id):
     }
   ]'''))
 
+
+def filter_map_by_date_range(list_of_maps):
+    from_date = request.args.get("fromdate") or request.form.get("fromdate")
+    to_date = request.args.get("todate") or request.form.get("todate") or datetime.today().timestamp()
+    if from_date:
+        list_of_maps = [i for i in list_of_maps if int(from_date) <= int(i["Created Date"]) <= int(to_date)]
+    return list_of_maps
 
 
 def return_json_data(status, dtype, payload):
