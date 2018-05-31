@@ -92,8 +92,8 @@ def get_node_frequency_by_user_id(user_email):
         # scraper = ScrapeMap("https://web:strate@webstrates.ucsd.edu/datateam/")
         nodes = mongo.get_nodes()  # scraper.get_nodes()
         for node in nodes:
-            nodes_labels_by_map[node["label"] or ""] += 1
-    return return_json_data("success", "frequency", dict(nodes_labels_by_map))
+            nodes_labels_by_map[node["label"]] += 1
+    return return_json_data("success", "frequency", convert_frequency_to_list(nodes_labels_by_map))
 
 
 @app.route("/nodes/frequency")
@@ -105,8 +105,8 @@ def get_node_frequency_for_all_users():
             # scraper = ScrapeMap("https://web:strate@webstrates.ucsd.edu/datateam/")
             nodes = mongo.get_nodes()  # scraper.get_nodes()
             for node in nodes:
-                nodes_labels_by_map[node["label"] or ""] += 1
-    return return_json_data("success", "frequency", dict(nodes_labels_by_map))
+                nodes_labels_by_map[node["label"]] += 1
+    return return_json_data("success", "frequency", convert_frequency_to_list(nodes_labels_by_map))
 
 
 @app.route("/users/<string:owner_email>/maps")
@@ -195,3 +195,7 @@ def return_json_data(status, dtype, payload):
     response = jsonify({"status": status, dtype: payload})
     response.headers.add('Access-Control-Allow-Origin', '*')
     return response
+
+
+def convert_frequency_to_list(freq_dic):
+    return [{"label": i, "frequency": j} for i, j in freq_dic.items()]
