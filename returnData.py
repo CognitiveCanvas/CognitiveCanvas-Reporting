@@ -93,6 +93,19 @@ def get_node_frequency_by_user_id(user_email):
     return return_json_data("success", "frequency", dict(nodes_labels_by_map))
 
 
+@app.route("/users/nodes/frequency")
+def get_node_frequency_for_all_users():
+    list_of_users = mongo.get_users()
+    nodes_labels_by_map = defaultdict(int)
+    for user in list_of_users:
+        for map in user["MapsCreated"]:
+            # scraper = ScrapeMap("https://web:strate@webstrates.ucsd.edu/datateam/")
+            nodes = mongo.get_nodes()  # scraper.get_nodes()
+            for node in nodes:
+                nodes_labels_by_map[node["label"] or ""] += 1
+    return return_json_data("success", "frequency", dict(nodes_labels_by_map))
+
+
 @app.route("/users/<string:owner_email>/maps")
 def get_map_data_by_owner_email(owner_email):
     list_of_maps = mongo.get_map_by_key_value("Owner", owner_email)
