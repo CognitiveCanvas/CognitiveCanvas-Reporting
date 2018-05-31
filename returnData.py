@@ -79,6 +79,12 @@ def get_map_data_by_owner_email(owner_email):
     list_of_maps = mongo.get_map_by_key_value("Owner", owner_email)
     title_filter = request.args.get("title") or request.form.get("title")
     id_filter = request.args.get("id") or request.form.get("id")
+    from_date = request.args.get("fromdate") or request.form.get("fromdate")
+    to_date = request.args.get("todate") or request.form.get("todate") or datetime.today().timestamp()
+
+    if from_date:
+        list_of_maps = [i for i in list_of_maps if from_date <= i["Created Date"] <= to_date]
+
     if not (title_filter or id_filter):
         return return_json_data("success", "maps", list_of_maps)
     if title_filter and not id_filter:
