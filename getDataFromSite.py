@@ -109,6 +109,3 @@ class ScrapeMap:
 
     def get_nodes(self):
         return self.nodes
-
-scraper = ScrapeMap("https://web:strate@webstrates.ucsd.edu/datateam/")
-print(scraper.get_nodes())
