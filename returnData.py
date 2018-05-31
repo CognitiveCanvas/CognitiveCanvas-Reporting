@@ -1,6 +1,9 @@
 from collections import defaultdict
 from flask import Flask, render_template, request, jsonify, g, redirect, url_for, make_response
 from time import gmtime, strftime
+
+from selenium.common.exceptions import WebDriverException
+
 from getDataFromMongo import DbData
 from getDataFromSite import ScrapeMap
 from getDummyData import DummyData
@@ -169,9 +172,12 @@ def get_nodes_by_map_id(map_id):
 
 @app.route("/maps/<string:map_id>/edges")
 def get_edges_by_map_id(map_id):
-    scraper = ScrapeMap("https://web:strate@webstrates.ucsd.edu/datateam/")
+    try:
+        scraper = ScrapeMap("https://web:strate@webstrates.ucsd.edu/datateam/")
+        edges = scraper.get_edges()
+    except WebDriverException:
+        edges = mongo.get_edges()
     edge_filter = request.args.get("filter") or request.form.get("filter")
-    edges = scraper.get_edges()
     if edge_filter:
         edges = {i.get("id"): i.get(edge_filter) for i in edges}
     return return_json_data("success", "edges", edges)
