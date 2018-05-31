@@ -169,9 +169,9 @@ def get_nodes_by_map_id(map_id):
 
 @app.route("/maps/<string:map_id>/edges")
 def get_edges_by_map_id(map_id):
-    # scraper = ScrapeMap("https://web:strate@webstrates.ucsd.edu/datateam/")
+    scraper = ScrapeMap("https://web:strate@webstrates.ucsd.edu/datateam/")
     edge_filter = request.args.get("filter") or request.form.get("filter")
-    edges = mongo.get_edges()  # scraper.get_edges()
+    edges = scraper.get_edges()
     if edge_filter:
         edges = {i.get("id"): i.get(edge_filter) for i in edges}
     return return_json_data("success", "edges", edges)
