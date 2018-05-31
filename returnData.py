@@ -122,64 +122,21 @@ def get_map_data_by_map_id(map_id):
 @app.route("/maps/<string:map_id>/nodes")
 def get_nodes_by_map_id(map_id):
     # scraper = ScrapeMap("https://web:strate@webstrates.ucsd.edu/datateam/")
-    # node_filter = request.args.get("filter") or request.form.get("filter")
-    # nodes = scraper.get_nodes()
-    # if node_filter:
-    #     nodes = {i.get("id"): i.get(node_filter) for i in nodes}
-    return return_json_data("success", "nodes", loads('''[
-        {
-            "color": "blue",
-            "creation_time": 1527188610,
-            "id": "H1yuhFEyQ_1527188610581",
-            "label": null,
-            "locationX": "2214.17",
-            "locationY": "1275.52",
-            "shape": "circle",
-            "size": "66.375"
-        },
-        {
-            "color": "red",
-            "creation_time": 1527188641,
-            "id": "By8FhYNJm_1527188641813",
-            "label": "Node Name",
-            "locationX": "2486",
-            "locationY": "1144",
-            "shape": "circle",
-            "size": "48.89"
-        },
-        {
-            "color": "black",
-            "creation_time": 1527188652,
-            "id": "By8FhYNJm_1527188652520",
-            "label": "OKOK",
-            "locationX": "2370.85",
-            "locationY": "1432.51",
-            "shape": "circle",
-            "size": "65.065"
-        }
-    ]'''))
+    node_filter = request.args.get("filter") or request.form.get("filter")
+    nodes = mongo.get_nodes()  # scraper.get_nodes()
+    if node_filter:
+        nodes = {i.get("id"): i.get(node_filter) for i in nodes}
+    return return_json_data("success", "nodes", nodes)
 
 
 @app.route("/maps/<string:map_id>/edges")
 def get_edges_by_map_id(map_id):
     # scraper = ScrapeMap("https://web:strate@webstrates.ucsd.edu/datateam/")
-    # edge_filter = request.args.get("filter") or request.form.get("filter")
-    # edges = scraper.get_edges()
-    # if edge_filter:
-    #     edges = {i.get("id"): i.get(edge_filter) for i in edges}
-    return return_json_data("success", "edges", loads('''[
-    {
-      "creation_time": 1527188849, 
-      "id": "By8FhYNJm_1527188849601", 
-      "label": "Name me please", 
-      "locationX1": "2370.85", 
-      "locationX2": "2486", 
-      "locationY1": "1432.51", 
-      "locationY2": "1144", 
-      "source_id": "By8FhYNJm_1527188652520", 
-      "target_id": "By8FhYNJm_1527188641813"
-    }
-  ]'''))
+    edge_filter = request.args.get("filter") or request.form.get("filter")
+    edges = mongo.get_edges()  # scraper.get_edges()
+    if edge_filter:
+        edges = {i.get("id"): i.get(edge_filter) for i in edges}
+    return return_json_data("success", "edges", edges)
 
 
 def filter_map_by_date_range(list_of_maps):

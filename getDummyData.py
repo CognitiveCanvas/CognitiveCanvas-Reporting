@@ -70,8 +70,57 @@ class DummyData:
                             "Versions": ["have", "no", "idea", "what", "this", "is"]
                         }]"""
 
+        self.nodes_json = """[
+                            {
+                                "color": "blue",
+                                "creation_time": 1527188610,
+                                "id": "H1yuhFEyQ_1527188610581",
+                                "label": null,
+                                "locationX": "2214.17",
+                                "locationY": "1275.52",
+                                "shape": "circle",
+                                "size": "66.375"
+                            },
+                            {
+                                "color": "red",
+                                "creation_time": 1527188641,
+                                "id": "By8FhYNJm_1527188641813",
+                                "label": "Node Name",
+                                "locationX": "2486",
+                                "locationY": "1144",
+                                "shape": "circle",
+                                "size": "48.89"
+                            },
+                            {
+                                "color": "black",
+                                "creation_time": 1527188652,
+                                "id": "By8FhYNJm_1527188652520",
+                                "label": "OKOK",
+                                "locationX": "2370.85",
+                                "locationY": "1432.51",
+                                "shape": "circle",
+                                "size": "65.065"
+                            }
+                        ]"""
+
+        self.edges_json = """[
+                            {
+                              "creation_time": 1527188849, 
+                              "id": "By8FhYNJm_1527188849601", 
+                              "label": "Name me please", 
+                              "locationX1": "2370.85", 
+                              "locationX2": "2486", 
+                              "locationY1": "1432.51", 
+                              "locationY2": "1144", 
+                              "source_id": "By8FhYNJm_1527188652520", 
+                              "target_id": "By8FhYNJm_1527188641813"
+                            }
+                          ]"""
+
         self.users = json.loads(self.users_json)
         self.maps = json.loads(self.map_json)
+        self.nodes = json.loads(self.nodes_json)
+        self.edges = json.loads(self.edges_json)
 
     def get_user_by_key_value(self, data_point, data_value, fields=None):
         data = [i for i in self.users if i[data_point] == data_value]
@@ -90,6 +139,12 @@ class DummyData:
 
     def get_maps(self):
         return self.maps
+
+    def get_nodes(self):
+        return self.nodes
+
+    def get_edges(self):
+        return self.edges
 
     def add_user(self, user):
         self.users.append(user)
