@@ -172,11 +172,11 @@ def get_nodes_by_map_id(map_id):
 
 @app.route("/maps/<string:map_id>/edges")
 def get_edges_by_map_id(map_id):
-    try:
-        scraper = ScrapeMap("https://web:strate@webstrates.ucsd.edu/datateam/")
-        edges = scraper.get_edges()
-    except WebDriverException:
-        edges = mongo.get_edges()
+    # try:
+    #     scraper = ScrapeMap("https://web:strate@webstrates.ucsd.edu/datateam/")
+    #     edges = scraper.get_edges()
+    # except WebDriverException:
+    edges = mongo.get_edges()
     edge_filter = request.args.get("filter") or request.form.get("filter")
     if edge_filter:
         edges = {i.get("id"): i.get(edge_filter) for i in edges}
