@@ -109,6 +109,31 @@ def get_node_frequency_for_all_users():
     return return_json_data("success", "frequency", convert_frequency_to_list(nodes_labels_by_map))
 
 
+@app.route("/users/<string:user_email>/edges/frequency")
+def get_edge_frequency_by_user_id(user_email):
+    list_of_maps = mongo.get_user_by_key_value("email", user_email, fields=["MapsCreated"])
+    edges_labels_by_map = defaultdict(int)
+    for map in list_of_maps[0]["MapsCreated"]:
+        # scraper = ScrapeMap("https://web:strate@webstrates.ucsd.edu/datateam/")
+        edges = mongo.get_edges()  # scraper.get_nodes()
+        for edge in edges:
+            edges_labels_by_map[edge["label"]] += 1
+    return return_json_data("success", "frequency", convert_frequency_to_list(edges_labels_by_map))
+
+
+@app.route("/edges/frequency")
+def get_edge_frequency_for_all_users():
+    list_of_users = mongo.get_users()
+    edges_labels_by_map = defaultdict(int)
+    for user in list_of_users:
+        for map in user["MapsCreated"]:
+            # scraper = ScrapeMap("https://web:strate@webstrates.ucsd.edu/datateam/")
+            edges = mongo.get_edges()  # scraper.get_nodes()
+            for edge in edges:
+                edges_labels_by_map[edge["label"]] += 1
+    return return_json_data("success", "frequency", convert_frequency_to_list(edges_labels_by_map))
+
+
 @app.route("/users/<string:owner_email>/maps")
 def get_map_data_by_owner_email(owner_email):
     list_of_maps = mongo.get_map_by_key_value("Owner", owner_email)
