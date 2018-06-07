@@ -37,7 +37,7 @@ def get_user_data():
 
 @app.route("/users/<string:user_email>")
 def get_user_data_by_user_email(user_email):
-    list_of_users = mongo.get_user_by_key_value("email", user_email)
+    list_of_users = mongo.get_user_by_key_values("email", user_email.strip(";").split(";"))
     return return_json_data("success", "users", list_of_users)
 
 

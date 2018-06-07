@@ -125,7 +125,13 @@ class DummyData:
     def get_user_by_key_value(self, data_point, data_value, fields=None):
         data = [i for i in self.users if i[data_point] == data_value]
         if fields:
-            return [{field:d[field] for field in fields} for d in data]
+            return [{field: d[field] for field in fields} for d in data]
+        return data
+
+    def get_user_by_key_values(self, data_point, data_values, fields=None):
+        data = [i for i in self.users if i[data_point] in data_values]
+        if fields:
+            return [{field: d[field] for field in fields} for d in data]
         return data
 
     def get_users(self):
@@ -134,7 +140,7 @@ class DummyData:
     def get_map_by_key_value(self, data_point, data_value, fields=None):
         data = [i for i in self.maps if i[data_point] == data_value]
         if fields:
-            return [{field:d[field] for field in fields} for d in data]
+            return [{field: d[field] for field in fields} for d in data]
         return data
 
     def get_maps(self):
