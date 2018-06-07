@@ -158,11 +158,10 @@ def get_edge_frequency_for_all_users():
 
 @app.route("/users/<string:owner_email>/maps")
 def get_map_data_by_owner_email(owner_email):
-    list_of_maps = mongo.get_map_by_key_value("Owner", owner_email)
+    list_of_maps = mongo.get_map_by_key_values("Owner", owner_email.strip(";").split(";"))
     title_filter = request.args.get("title") or request.form.get("title")
     id_filter = request.args.get("id") or request.form.get("id")
     list_of_maps = filter_map_by_date_range(list_of_maps)
-
     if not (title_filter or id_filter):
         return return_json_data("success", "maps", list_of_maps)
     if title_filter and not id_filter:

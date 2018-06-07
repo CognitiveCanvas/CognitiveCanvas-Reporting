@@ -143,6 +143,12 @@ class DummyData:
             return [{field: d[field] for field in fields} for d in data]
         return data
 
+    def get_map_by_key_values(self, data_point, data_values, fields=None):
+        data = [i for i in self.maps if i[data_point] in data_values]
+        if fields:
+            return [{field: d[field] for field in fields} for d in data]
+        return data
+
     def get_maps(self):
         return self.maps
 
