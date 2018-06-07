@@ -175,7 +175,7 @@ def get_map_data_by_owner_email(owner_email):
 
 @app.route("/users/<string:owner_email>/maps/timeline")
 def get_map_timeline_by_owner_email(owner_email):
-    list_of_maps = mongo.get_map_by_key_value("Owner", owner_email)
+    list_of_maps = mongo.get_map_by_key_values("Owner", owner_email.strip(";").split(";"))
     type_filter = request.args.get("filter") or request.form.get("filter")
     filtered_list = defaultdict(int)
 
@@ -202,31 +202,55 @@ def get_map_data():
 
 @app.route("/maps/<string:map_id>")
 def get_map_data_by_map_id(map_id):
-    list_of_maps = mongo.get_map_by_key_value("MapWebstrateID", map_id)
+    list_of_maps = mongo.get_map_by_key_values("MapWebstrateID", map_id.strip(";").split(";"))
     return return_json_data("success", "maps", list_of_maps)
+
+
+@app.route("/maps/<string:map_id>/artifacts")
+def get_artifacts_by_map_id(map_id):
+    maps = []
+    for single_map in map_id.strip(";").split(";"):
+        # scraper = ScrapeMap("https://web:strate@webstrates.ucsd.edu/datateam/")
+        node_filter = request.args.get("filter") or request.form.get("filter")
+        nodes = mongo.get_nodes()  # scraper.get_nodes()
+        if node_filter:
+            nodes = {i.get("id"): i.get(node_filter) for i in nodes}
+        edges = mongo.get_edges()
+        edge_filter = request.args.get("filter") or request.form.get("filter")
+        if edge_filter:
+            edges = {i.get("id"): i.get(edge_filter) for i in edges}
+        maps.append({"MapWebstrateID": single_map, "nodes": nodes, "edges": edges})
+    return return_json_data("success", "maps", maps)
 
 
 @app.route("/maps/<string:map_id>/nodes")
 def get_nodes_by_map_id(map_id):
-    # scraper = ScrapeMap("https://web:strate@webstrates.ucsd.edu/datateam/")
-    node_filter = request.args.get("filter") or request.form.get("filter")
-    nodes = mongo.get_nodes()  # scraper.get_nodes()
-    if node_filter:
-        nodes = {i.get("id"): i.get(node_filter) for i in nodes}
-    return return_json_data("success", "nodes", nodes)
+    maps = []
+    for single_map in map_id.strip(";").split(";"):
+        # scraper = ScrapeMap("https://web:strate@webstrates.ucsd.edu/datateam/")
+        node_filter = request.args.get("filter") or request.form.get("filter")
+        nodes = mongo.get_nodes()  # scraper.get_nodes()
+        if node_filter:
+            nodes = {i.get("id"): i.get(node_filter) for i in nodes}
+        maps.append({"MapWebstrateID": single_map, "nodes": nodes})
+    return return_json_data("success", "maps", maps)
 
 
 @app.route("/maps/<string:map_id>/edges")
 def get_edges_by_map_id(map_id):
-    # try:
-    #     scraper = ScrapeMap("https://web:strate@webstrates.ucsd.edu/datateam/")
-    #     edges = scraper.get_edges()
-    # except WebDriverException:
-    edges = mongo.get_edges()
-    edge_filter = request.args.get("filter") or request.form.get("filter")
-    if edge_filter:
-        edges = {i.get("id"): i.get(edge_filter) for i in edges}
-    return return_json_data("success", "edges", edges)
+    maps = []
+    for single_map in map_id.strip(";").split(";"):
+
+        # try:
+        #     scraper = ScrapeMap("https://web:strate@webstrates.ucsd.edu/datateam/")
+        #     edges = scraper.get_edges()
+        # except WebDriverException:
+        edges = mongo.get_edges()
+        edge_filter = request.args.get("filter") or request.form.get("filter")
+        if edge_filter:
+            edges = {i.get("id"): i.get(edge_filter) for i in edges}
+        maps.append({"MapWebstrateID": single_map, "edges": edges})
+    return return_json_data("success", "maps", maps)
 
 
 def filter_map_by_date_range(list_of_maps):
