@@ -55,19 +55,22 @@ def get_user_data_if_logged_in():
 
 @app.route("/users/<string:user_email>/maps/created")
 def get_maps_created_by_user_email(user_email):
-    list_of_users = mongo.get_user_by_key_values("email", user_email.strip(";").split(";"), fields=["MapsCreated", "email"])
+    list_of_users = mongo.get_user_by_key_values("email", user_email.strip(";").split(";"),
+                                                 fields=["MapsCreated", "email"])
     return return_json_data("success", "users", list_of_users)
 
 
 @app.route("/users/<string:user_email>/maps/accessed")
 def get_maps_accessed_by_user_email(user_email):
-    list_of_users = mongo.get_user_by_key_values("email", user_email.strip(";").split(";"), fields=["MapsAccessed", "email"])
+    list_of_users = mongo.get_user_by_key_values("email", user_email.strip(";").split(";"),
+                                                 fields=["MapsAccessed", "email"])
     return return_json_data("success", "users", list_of_users)
 
 
 @app.route("/users/<string:user_email>/nodes")
 def get_nodes_by_user_id(user_email):
-    list_of_users = mongo.get_user_by_key_values("email", user_email.strip(";").split(";"), fields=["MapsCreated", "email"])
+    list_of_users = mongo.get_user_by_key_values("email", user_email.strip(";").split(";"),
+                                                 fields=["MapsCreated", "email"])
 
     users = []
 
@@ -91,14 +94,21 @@ def get_nodes_by_user_id(user_email):
 
 @app.route("/users/<string:user_email>/nodes/frequency")
 def get_node_frequency_by_user_id(user_email):
-    list_of_maps = mongo.get_user_by_key_value("email", user_email, fields=["MapsCreated"])
-    nodes_labels_by_map = defaultdict(int)
-    for map in list_of_maps[0]["MapsCreated"]:
-        # scraper = ScrapeMap("https://web:strate@webstrates.ucsd.edu/datateam/")
-        nodes = mongo.get_nodes()  # scraper.get_nodes()
-        for node in nodes:
-            nodes_labels_by_map[node["label"]] += 1
-    return return_json_data("success", "frequency", convert_frequency_to_list(nodes_labels_by_map))
+    list_of_users = mongo.get_user_by_key_values("email", user_email.strip(";").split(";"),
+                                                 fields=["MapsCreated", "email"])
+    nodes_labels_by_overall = defaultdict(int)
+    users = []
+    for user in list_of_users:
+        nodes_labels_by_user = defaultdict(int)
+        for map in user["MapsCreated"]:
+            # scraper = ScrapeMap("https://web:strate@webstrates.ucsd.edu/datateam/")
+            nodes = mongo.get_nodes()  # scraper.get_nodes()
+            for node in nodes:
+                nodes_labels_by_overall[node["label"]] += 1
+                nodes_labels_by_user[node["label"]] += 1
+        users.append({"email": user['email'], "nodes": convert_frequency_to_list(nodes_labels_by_user)})
+    return return_json_data("success", "users", users,
+                            overall=convert_frequency_to_list(nodes_labels_by_overall))
 
 
 @app.route("/nodes/frequency")
@@ -221,8 +231,10 @@ def filter_map_by_date_range(list_of_maps):
     return list_of_maps
 
 
-def return_json_data(status, dtype, payload):
-    response = jsonify({"status": status, dtype: payload})
+def return_json_data(status, dtype, payload, **kwargs):
+    result = {"status": status, dtype: payload}
+    result.update(kwargs)
+    response = jsonify(result)
     response.headers.add('Access-Control-Allow-Origin', '*')
     return response
 
