@@ -55,20 +55,14 @@ def get_user_data_if_logged_in():
 
 @app.route("/users/<string:user_email>/maps/created")
 def get_maps_created_by_user_email(user_email):
-    list_of_users = mongo.get_user_by_key_value("email", user_email, fields=["MapsCreated"])
-    if len(list_of_users) == 0:
-        return return_json_data("success", "maps", [])
-    list_of_maps = list_of_users[0]["MapsCreated"]
-    return return_json_data("success", "maps", list_of_maps)
+    list_of_users = mongo.get_user_by_key_values("email", user_email.strip(";").split(";"), fields=["MapsCreated", "email"])
+    return return_json_data("success", "users", list_of_users)
 
 
 @app.route("/users/<string:user_email>/maps/accessed")
 def get_maps_accessed_by_user_email(user_email):
-    list_of_users = mongo.get_user_by_key_value("email", user_email, fields=["MapsAccessed"])
-    if len(list_of_users) == 0:
-        return return_json_data({"status", "maps", []})
-    list_of_maps = list_of_users[0]["MapsAccessed"]
-    return return_json_data("success", "maps", list_of_maps)
+    list_of_users = mongo.get_user_by_key_values("email", user_email.strip(";").split(";"), fields=["MapsAccessed", "email"])
+    return return_json_data("success", "users", list_of_users)
 
 
 @app.route("/users/<string:user_email>/nodes")
