@@ -67,15 +67,26 @@ def get_maps_accessed_by_user_email(user_email):
 
 @app.route("/users/<string:user_email>/nodes")
 def get_nodes_by_user_id(user_email):
-    list_of_maps = mongo.get_user_by_key_value("email", user_email, fields=["MapsCreated"])
-    nodes_by_map = {}
-    sum_of_nodes = 0
-    for map in list_of_maps[0]["MapsCreated"]:
-        # scraper = ScrapeMap("https://web:strate@webstrates.ucsd.edu/datateam/")
-        nodes = mongo.get_nodes()  # scraper.get_nodes()
-        nodes_by_map[map] = nodes
-        sum_of_nodes += len(nodes)
-    return return_json_data("success", "nodes", {"nodes": nodes_by_map, "total": sum_of_nodes})
+    list_of_users = mongo.get_user_by_key_values("email", user_email.strip(";").split(";"), fields=["MapsCreated", "email"])
+
+    users = []
+
+    for user in list_of_users:
+        maps = []
+        sum_of_nodes_per_user = 0
+        for created_map in user["MapsCreated"]:
+            # scraper = ScrapeMap("https://web:strate@webstrates.ucsd.edu/datateam/")
+            single_map = {}
+            nodes = mongo.get_nodes()  # scraper.get_nodes()
+            single_map["nodes"] = nodes
+            single_map["MapWebstrateID"] = created_map
+            sum_of_nodes_per_user += len(nodes)
+            single_map["total"] = len(nodes)
+            maps.append(single_map)
+        single_user = {"maps": maps, "total": sum_of_nodes_per_user}
+        users.append(single_user)
+
+    return return_json_data("success", "users", users)
 
 
 @app.route("/users/<string:user_email>/nodes/frequency")
